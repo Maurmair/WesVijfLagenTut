@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TestModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="TestModelStoreContainer">
+    <EntitySet Name="GebruikerSet" EntityType="TestModel.Store.GebruikerSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GeoCacheSet" EntityType="TestModel.Store.GeoCacheSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GebruikerGeoCache" EntityType="TestModel.Store.GebruikerGeoCache" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_GebruikerGeoCache_Gebruiker" Association="TestModel.Store.FK_GebruikerGeoCache_Gebruiker">
+      <End Role="Gebruiker" EntitySet="GebruikerSet" />
+      <End Role="GebruikerGeoCache" EntitySet="GebruikerGeoCache" />
+    </AssociationSet>
+    <AssociationSet Name="FK_GebruikerGeoCache_GeoCache" Association="TestModel.Store.FK_GebruikerGeoCache_GeoCache">
+      <End Role="GeoCache" EntitySet="GeoCacheSet" />
+      <End Role="GebruikerGeoCache" EntitySet="GebruikerGeoCache" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="GebruikerSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TwitterGebruikersNaam" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GeoCacheSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Locatie" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Beschrijving" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CacheType" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GebruikerGeoCache">
+    <Key>
+      <PropertyRef Name="Gebruiker_Id" />
+      <PropertyRef Name="GeoCache_Id" />
+    </Key>
+    <Property Name="Gebruiker_Id" Type="int" Nullable="false" />
+    <Property Name="GeoCache_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_GebruikerGeoCache_Gebruiker">
+    <End Role="Gebruiker" Type="TestModel.Store.GebruikerSet" Multiplicity="1" />
+    <End Role="GebruikerGeoCache" Type="TestModel.Store.GebruikerGeoCache" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Gebruiker">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="GebruikerGeoCache">
+        <PropertyRef Name="Gebruiker_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_GebruikerGeoCache_GeoCache">
+    <End Role="GebruikerGeoCache" Type="TestModel.Store.GebruikerGeoCache" Multiplicity="*" />
+    <End Role="GeoCache" Type="TestModel.Store.GeoCacheSet" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GeoCache">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="GebruikerGeoCache">
+        <PropertyRef Name="GeoCache_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="WesVijfLagen.Models" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="TestModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="GebruikerSet" EntityType="WesVijfLagen.Models.Gebruiker" />
+          <EntitySet Name="GeoCacheSet" EntityType="WesVijfLagen.Models.GeoCache" />
+          <AssociationSet Name="GebruikerGeoCache" Association="WesVijfLagen.Models.GebruikerGeoCache">
+            <End Role="Gebruiker" EntitySet="GebruikerSet" />
+            <End Role="GeoCache" EntitySet="GeoCacheSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Gebruiker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="TwitterGebruikersNaam" Type="String" Nullable="false" />
+          <NavigationProperty Name="GeoCache" Relationship="WesVijfLagen.Models.GebruikerGeoCache" FromRole="Gebruiker" ToRole="GeoCache" />
+        </EntityType>
+        <EntityType Name="GeoCache">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Locatie" Type="String" Nullable="false" />
+          <Property Name="Beschrijving" Type="String" Nullable="false" />
+          <Property Name="CacheType" Type="String" Nullable="false" />
+          <NavigationProperty Name="Gebruiker" Relationship="WesVijfLagen.Models.GebruikerGeoCache" FromRole="GeoCache" ToRole="Gebruiker" />
+        </EntityType>
+        <Association Name="GebruikerGeoCache">
+          <End Type="WesVijfLagen.Models.Gebruiker" Role="Gebruiker" Multiplicity="*" />
+          <End Type="WesVijfLagen.Models.GeoCache" Role="GeoCache" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="TestModelStoreContainer" CdmEntityContainer="TestModelContainer">
+    <EntitySetMapping Name="GebruikerSet">
+      <EntityTypeMapping TypeName="IsTypeOf(WesVijfLagen.Models.Gebruiker)">
+        <MappingFragment StoreEntitySet="GebruikerSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="TwitterGebruikersNaam" ColumnName="TwitterGebruikersNaam" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GeoCacheSet">
+      <EntityTypeMapping TypeName="IsTypeOf(WesVijfLagen.Models.GeoCache)">
+        <MappingFragment StoreEntitySet="GeoCacheSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Locatie" ColumnName="Locatie" />
+          <ScalarProperty Name="Beschrijving" ColumnName="Beschrijving" />
+          <ScalarProperty Name="CacheType" ColumnName="CacheType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="GebruikerGeoCache" TypeName="WesVijfLagen.Models.GebruikerGeoCache" StoreEntitySet="GebruikerGeoCache">
+      <EndProperty Name="Gebruiker">
+        <ScalarProperty Name="Id" ColumnName="Gebruiker_Id" />
+      </EndProperty>
+      <EndProperty Name="GeoCache">
+        <ScalarProperty Name="Id" ColumnName="GeoCache_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
